@@ -30,7 +30,7 @@ function login(req, res) {
     .then(user => {
       if(user && bcrypt.compareSync(creds.password, user.password)){
         const token = generateToken(user);
-        res.status(200).json({ message: 'WELCOME', token});
+        res.status(200).json({ message: `Welcome ${user.username}!`, token});
       }else{
         res.status(401).json({message:'You are not allowed here!'})
       }
