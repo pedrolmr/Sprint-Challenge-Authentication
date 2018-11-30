@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { Switch, NavLink, Route } from 'react-router-dom';
+import Register from './components/Register';
+import Login from './components/Login';
 
 class App extends Component {
   render() {
@@ -16,7 +18,7 @@ class App extends Component {
         <section>
           <Switch>
             <Route path='/register' component={Register}/>
-            <Route path='/register' component={Login} />
+            <Route path='/login' component={Login} />
           </Switch>
         </section>
 
