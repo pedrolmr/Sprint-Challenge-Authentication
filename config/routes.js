@@ -2,7 +2,7 @@ const axios = require('axios');
 const bcrypt = require('bcryptjs');
 const db = require('../database/dbConfig');
 
-const { authenticate } = require('./middlewares');
+const { authenticate, generateToken } = require('./middlewares');
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -24,7 +24,18 @@ function register(req, res) {
 }
 
 function login(req, res) {
-  // implement user login
+  const creds = req.body;
+
+  db('users').where({ username: creds.username }).first()
+    .then(user => {
+      if(user && bcrypt.compareSync(creds.password, user.password)){
+        const token = generateToken(user);
+        res.status(200).json({ message: 'WELCOME', token});
+      }else{
+        res.status(401).json({message:'You are not allowed here!'})
+      }
+    })
+    .catch(error => res.json(error))
 }
 
 function getJokes(req, res) {
