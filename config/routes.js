@@ -1,4 +1,6 @@
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
+const db = require('../database/dbConfig');
 
 const { authenticate } = require('./middlewares');
 
@@ -9,7 +11,16 @@ module.exports = server => {
 };
 
 function register(req, res) {
-  // implement user registration
+  const creds = req.body;
+  const hash = bcrypt.hashSync(creds.password, 10);
+  creds.password = hash;
+
+  db('users')
+    .insert(creds)
+    .then(ids => {
+      res.status(201).json(ids);
+    })
+    .catch(error => json(error))
 }
 
 function login(req, res) {
@@ -19,7 +30,7 @@ function login(req, res) {
 function getJokes(req, res) {
   axios
     .get(
-      'https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten'
+      'https://safe-falls-22549.herokuapp.com/random_ten'
     )
     .then(response => {
       res.status(200).json(response.data);
